@@ -1,0 +1,40 @@
+{
+  "plugins": {
+    "catppuccin": {
+      "rev": "8edd468af4d63212b84d69b2ddb5ffc9023ef5eb",
+      "src": "https://github.com/catppuccin/nvim"
+    },
+    "neo-tree.nvim": {
+      "rev": "8f858a7bb4cd4d154e7b3a22359cbc3c888972ea",
+      "src": "https://github.com/nvim-neo-tree/neo-tree.nvim"
+    },
+    "nui.nvim": {
+      "rev": "de740991c12411b663994b2860f1a4fd0937c130",
+      "src": "https://github.com/MunifTanjim/nui.nvim"
+    },
+    "nvim-cokeline": {
+      "rev": "9fbed130683b7b6f73198c09e35ba4b33f547c08",
+      "src": "https://github.com/willothy/nvim-cokeline"
+    },
+    "nvim-web-devicons": {
+      "rev": "7d8dad2c837fcdf2e65997e68657c1a21c568074",
+      "src": "https://github.com/nvim-tree/nvim-web-devicons"
+    },
+    "plenary.nvim": {
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "project.nvim": {
+      "rev": "8c6bad7d22eef1b71144b401c9f74ed01526a4fb",
+      "src": "https://github.com/ahmedkhalf/project.nvim"
+    },
+    "snacks.nvim": {
+      "rev": "0770753c88228f7f15449c6a5b242e3f7cd0d71c",
+      "src": "https://github.com/folke/snacks.nvim"
+    },
+    "telescope.nvim": {
+      "rev": "7d324792b7943e4aa16ad007212e6acc6f9fe335",
+      "src": "https://github.com/nvim-telescope/telescope.nvim"
+    }
+  }
+}
