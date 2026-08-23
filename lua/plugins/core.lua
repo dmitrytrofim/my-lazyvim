@@ -1,12 +1,10 @@
 return {
   {
-    -- Обновили адрес репозитория на новый 👇
     "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
-        "html-lsp",
+        "html-lsp", -- Оставляем только чистый HTML сервер
         "css-lsp",
-        "emmet-language-server", -- Ставим Emmet
       },
     },
   },
