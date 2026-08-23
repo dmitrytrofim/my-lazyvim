@@ -1,4 +1,40 @@
-# 💤 LazyVim
+# 💤 My LazyVim Configuration
 
-A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
-Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
+Моя персональная сборка [LazyVim](https://github.com). Настроена для быстрой разработки, содержит кастомные горячие клавиши и оптимизированный UI.
+
+## 🚀 Быстрый старт
+
+### 1. Требования (Зависимости)
+Убедитесь, что в системе установлены:
+* **Neovim >= 0.10.0**
+* **Git**
+* **Nerd Fonts** (рекомендуется *JetBrainsMono*)
+* **Ripgrep** (для поиска по файлам)
+* **FD** (для быстрого поиска файлов)
+
+### 2. Установка
+Склонируйте этот репозиторий в папку конфигурации Neovim:
+
+```sh
+git clone https://github.com ~/.config/nvim
+```
+
+Запустите Neovim (`nvim`), и Lazy.nvim автоматически установит все плагины.
+
+## 📁 Структура проекта
+
+```text
+~/.config/nvim/
+├── lua/
+│   ├── config/
+│   │   ├── autocmds.lua  # Автокоманды
+│   │   ├── keymaps.lua   # Мои горячие клавиши
+│   │   └── options.lua   # Системные опции (кастомный курсор, табы)
+│   └── plugins/
+│       ├── core.lua      # Изменения стандартных плагинов
+│       └── ui.lua        # Настройки интерфейса (отключение анимаций)
+└── init.lua              # Точка входа
+```
+
+---
+*Основано на шаблоне [LazyVim Starter](https://github.com).*
