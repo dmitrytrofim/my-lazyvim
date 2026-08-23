@@ -1,27 +1,30 @@
--- Autocmds are automatically loaded on the VeryLazy event
--- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
---
--- Add any additional autocmds here
--- with `vim.api.nvim_create_autocmd`
---
--- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
--- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
-
--- Гарантированное открытие проводника ТОЛЬКО при старте проекта
-vim.api.nvim_create_autocmd("BufReadPost", {
-  once = true, -- Срабатывает ровно один раз при загрузке самого первого файла
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "xml" },
   callback = function()
-    -- Если открыт стартовый дашборд, коммит или дифф — ничего не делаем
-    if vim.bo.filetype == "snacks_dashboard" or vim.bo.filetype == "gitcommit" or vim.bo.filetype == "diff" then
-      return
-    end
+    -- 1. Ваши текущие настройки отступов (оставляем без изменений)
+    vim.opt_local.expandtab = true
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.tabstop = 2
+    vim.opt_local.softtabstop = 2
 
-    -- Даем LazyVim отрисовать файл, а затем мягко открываем боковую панель справа
-    vim.schedule(function()
-      if Snacks and Snacks.picker and Snacks.picker.explorer then
-        Snacks.picker.explorer({ enter = false })
+    vim.opt_local.indentexpr = ""
+    vim.opt_local.smartindent = false
+    vim.opt_local.autoindent = true
+
+    -- 2. Магия для Enter внутри тегов (как в VS Code)
+    -- Функция проверяет, находятся ли слева и справа символы '>' и '<'
+    vim.keymap.set("i", "<CR>", function()
+      local line = vim.api.nvim_get_current_line()
+      local col = vim.api.nvim_win_get_cursor(0)[2]
+
+      -- Если курсор стоит ровно между '>' и '<' (например, <div>|</div>)
+      if col > 0 and line:sub(col, col) == ">" and line:sub(col + 1, col + 1) == "<" then
+        -- Разносим теги на три строки, делаем отступ и ставим курсор посередине
+        return "<CR><Esc>O<Tab>"
+      else
+        -- В остальных случаях работает обычный «тупой» перенос строки
+        return "<CR>"
       end
-    end)
+    end, { expr = true, buffer = true, remap = false })
   end,
 })
-
