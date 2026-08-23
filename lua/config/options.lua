@@ -2,21 +2,12 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
--- ========================================================================== --
--- НАСТРОЙКИ СКОРОСТИ И АНИМАЦИИ ДЛЯ NEOVIDE
--- ========================================================================== --
 if vim.g.neovide then
-  -- Возвращаем ваши экстремально быстрые настройки
   vim.g.neovide_scroll_animation_length = 0.05 
   vim.g.neovide_cursor_animation_length = 0.04
   vim.g.neovide_cursor_trail_size = 0.4
-  
-  -- Большой шаг мыши
   vim.opt.mousescroll = "ver:7,hor:6"
-end
-
-
-if vim.g.neovide then
-  vim.g.neovide_cursor_animation_length = 0 -- Убирает время анимации (курсор перемещается мгновенно)
-  vim.g.neovide_cursor_trail_size = 0        -- Убирает шлейф за курсором
+  vim.g.neovide_cursor_animation_length = 0
+  vim.g.neovide_cursor_trail_size = 0
+  vim.g.neovide_hide_mouse_when_typing = true
 end
