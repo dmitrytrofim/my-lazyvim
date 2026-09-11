@@ -28,3 +28,12 @@ vim.api.nvim_create_autocmd("FileType", {
     end, { expr = true, buffer = true, remap = false })
   end,
 })
+
+-- Автоматическая очистка кэша bufferline для закрытых файлов
+vim.api.nvim_create_autocmd("BufDelete", {
+  callback = function(args)
+    if git_root_cache then
+      git_root_cache[args.buf] = nil
+    end
+  end,
+})

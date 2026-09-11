@@ -1,3 +1,6 @@
+-- Выносим кэш в глобальную область файла, чтобы он жил между перерисовками
+local git_root_cache = {}
+
 return {
   "akinsho/bufferline.nvim",
   opts = {
@@ -9,7 +12,7 @@ return {
       padding = 1,
       max_name_length = 100,
 
-      -- ТОЧНАЯ НАСТРОЙКА ДЛЯ LINUX:
+      -- Оптимизированный формат отображения имени "папка/файл"
       name_formatter = function(buf)
         local bufnr = buf.bufnr
         if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then 
@@ -19,25 +22,23 @@ return {
         local path = vim.api.nvim_buf_get_name(bufnr)
         if path == "" then return buf.name end
 
-        -- Ищем корень .git репозитория (возвращает абсолютный путь)
-        local git_root = vim.fs.root(bufnr, ".git")
+        -- Ищем корень репозитория на диске ОДИН раз, потом берем мгновенно из памяти
+        local git_root = git_root_cache[bufnr]
         if not git_root then
-          git_root = vim.fn.getcwd()
+          git_root = vim.fs.root(bufnr, ".git") or vim.fn.getcwd()
+          git_root_cache[bufnr] = git_root
         end
 
-        -- Вырезаем из пути файла путь к git-корню
-        -- Например: из /home/dimas/project/index.html останется /index.html
-        local relative = path:sub(#git_root + 1)
+        -- Безопасная проверка: если путь к файлу почему-то короче корня, просто отдаем имя
+        if #path <= #git_root then return buf.name end
 
-        -- Разбиваем оставшийся путь по классическому слэшу /
+        local relative = path:sub(#git_root + 1)
         local parts = vim.split(relative, "/", { trimempty = true })
 
-        -- Если элементов больше одного (например: ["src", "index.html"]) — значит есть подпапка
         if #parts > 1 then
           local parent_dir = parts[#parts - 1]
           return parent_dir .. "/" .. buf.name
         else
-          -- Если файл лежит прямо рядом с .git (например: ["index.html"]) — выводим только имя файла
           return buf.name
         end
       end,
