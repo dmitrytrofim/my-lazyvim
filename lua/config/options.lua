@@ -1,17 +1,23 @@
--- Options are automatically loaded before lazy.nvim startup
--- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- Add any additional options here
+-- Базовые настройки интерфейса
+vim.opt.number = true
+vim.opt.relativenumber = false
 
+-- Специфичные настройки для графического интерфейса Neovide
 if vim.g.neovide then
-  vim.g.neovide_scroll_animation_length = 0.05 
-  vim.g.neovide_cursor_animation_length = 0.04
-  vim.g.neovide_cursor_trail_size = 0.4
-  vim.opt.mousescroll = "ver:7,hor:6"
+  -- Максимально быстрая прокрутка экрана (0.1 секунды вместо 0.3)
+  -- Экран перемещается мгновенно, но сохраняет микро-сглаживание без рывков
+  vim.g.neovide_scroll_animation_length = 0.1
+
+  -- ПОЛНОЕ отключение анимации курсора
+  -- Курсор будет перемещаться абсолютно жестко и мгновенно, как в стандартном терминале или VS Code
   vim.g.neovide_cursor_animation_length = 0
   vim.g.neovide_cursor_trail_size = 0
+  vim.g.neovide_cursor_vfx_mode = "none"
+
+  -- Скорость прокрутки колесиком мыши (оставляем для удобной навигации)
+  vim.opt.mousescroll = "ver:7,hor:6"
+
+  -- Полезные фичи для комфорта
   vim.g.neovide_hide_mouse_when_typing = true
-  vim.g.editorconfig = false
   vim.g.neovide_progress_bar_enabled = false
-  vim.opt.number = true
-  vim.opt.relativenumber = false
 end
