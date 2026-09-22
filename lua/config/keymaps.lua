@@ -12,5 +12,3 @@ end, { desc = "Open home" })
 vim.keymap.set('n', '<F5>', '<cmd>wall<cr>', { desc = 'Сохранить все файлы' })
 -- Для Insert режима (теперь ничего лишнего вставляться не будет)
 vim.keymap.set('i', '<F5>', '<C-O><cmd>wall<cr>', { desc = 'Сохранить все файлы' })
-
-
