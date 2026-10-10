@@ -62,5 +62,21 @@ return {
       end,
       desc = "Explorer",
     },
+    { 
+        "<leader>ff", 
+        function() Snacks.picker.files() end, 
+        desc = "Find Files (Project Root)" 
+    },
+    { 
+        "<leader>fF", 
+        function() 
+          Snacks.picker.files({ 
+            -- vim.fn.expand("%:p:h") мгновенно вычисляет путь к папке текущего буфера
+            cwd = vim.fn.expand("%:p:h"),
+            title = "Files in Current Dir",
+          }) 
+        end, 
+        desc = "Find Files (Current Directory)" 
+      },
   },
 }
