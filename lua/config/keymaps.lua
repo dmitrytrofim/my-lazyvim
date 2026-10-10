@@ -12,3 +12,6 @@ end, { desc = "Open home" })
 vim.keymap.set('n', '<F5>', '<cmd>wall<cr>', { desc = 'Сохранить все файлы' })
 -- Для Insert режима (теперь ничего лишнего вставляться не будет)
 vim.keymap.set('i', '<F5>', '<C-O><cmd>wall<cr>', { desc = 'Сохранить все файлы' })
+-- Перемещение вкладок-буферов влево и вправо по Alt + Shift + h/l
+vim.keymap.set("n", "<A-S-h>", "<cmd>BufferLineMovePrev<cr>", { desc = "Сдвинуть вкладку влево" })
+vim.keymap.set("n", "<A-S-l>", "<cmd>BufferLineMoveNext<cr>", { desc = "Сдвинуть вкладку вправо" })
