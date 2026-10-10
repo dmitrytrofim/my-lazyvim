@@ -1,20 +1,22 @@
--- Базовые настройки интерфейса
 vim.opt.number = true
 vim.opt.relativenumber = false
 
--- Специфичные настройки для графического интерфейса Neovide
-if vim.g.neovide then
-  -- Максимально быстрая прокрутка экрана (0.1 секунды вместо 0.3)
-  -- Экран перемещается мгновенно, но сохраняет микро-сглаживание без рывков
-  vim.g.neovide_scroll_animation_length = 0.1
+-- Глобальный выключатель плавности самого Neovim (убирает микро-лаги)
+vim.opt.smoothscroll = false 
 
-  -- ПОЛНОЕ отключение анимации курсора
-  -- Курсор будет перемещаться абсолютно жестко и мгновенно, как в стандартном терминале или VS Code
-  vim.g.neovide_cursor_animation_length = 0
+-- 2. Специфичные настройки для графического интерфейса Neovide
+if vim.g.neovide then
+  -- Абсолютный и жесткий ноль для скролла на уровне GUI
+  vim.g.neovide_scroll_animation_length = 0.0
+  vim.g.neovide_position_animation_length = 0.0
+  
+  -- Полное отключение анимации курсора (как в VS Code)
+  vim.g.neovide_cursor_animation_length = 0.0
   vim.g.neovide_cursor_trail_size = 0
   vim.g.neovide_cursor_vfx_mode = "none"
+  vim.g.neovide_cursor_animate_command_line = false
 
-  -- Скорость прокрутки колесиком мыши (оставляем для удобной навигации)
+  -- Скорость прокрутки колесиком мыши
   vim.opt.mousescroll = "ver:7,hor:6"
 
   -- Полезные фичи для комфорта
