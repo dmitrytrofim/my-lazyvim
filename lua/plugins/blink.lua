@@ -2,21 +2,23 @@ return {
   {
     "saghen/blink.cmp",
     opts = {
-      -- Настройки клавиш
       keymap = {
         preset = "default",
         ["<Esc>"] = { "hide", "fallback" },
 
-        -- Настройка стрелок для всех режимов (включая командную строку)
+        -- НАСТРОЙКА ENTER: если меню открыто — только вставляем подсказку (без новой строки!)
+        ["<CR>"] = { "accept", "fallback" },
+
+        -- Настройка стрелок для всех режимов
         ["<Up>"] = { "select_prev", "fallback" },
         ["<Down>"] = { "select_next", "fallback" },
       },
-      -- Явно включаем автодополнение для командной строки
       cmdline = {
         enabled = true,
         keymap = {
           preset = "default",
-          -- Дублируем стрелки отдельно для cmdline, чтобы гарантировать работу
+          -- Дублируем настройки для командной строки
+          ["<CR>"] = { "accept", "fallback" },
           ["<Up>"] = { "select_prev", "fallback" },
           ["<Down>"] = { "select_next", "fallback" },
         },

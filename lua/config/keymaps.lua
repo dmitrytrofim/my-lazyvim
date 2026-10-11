@@ -49,3 +49,22 @@ vim.keymap.set("n", "gf", function()
     vim.notify("Путь не найден", vim.log.levels.WARN)
   end
 end, { desc = "True Alias Go to File (gf)", silent = true })
+
+-- Быстрый прыжок по словам через Ctrl + Стрелки в режиме вставки
+vim.keymap.set("i", "<C-Left>", "<C-o>b", { desc = "Прыжок на слово назад" })
+vim.keymap.set("i", "<C-Right>", "<C-o>e<Right>", { desc = "Прыжок на слово вперед" })
+
+-- Удаление слова целиком через Ctrl + Backspace в режиме вставки
+-- Прописываем оба возможных кода клавиши, чтобы работало в любых терминалах и Neovide
+vim.keymap.set("i", "<C-Backspace>", "<C-w>", { desc = "Удалить слово слева" })
+vim.keymap.set("i", "<C-H>", "<C-w>", { desc = "Удалить слово слева (fallback)" })
+
+-- Ctrl + Enter в Insert mode создает чистую строку снизу и переходит на неё
+vim.keymap.set("i", "<C-CR>", "<C-o>o", { desc = "Создать чистую строку снизу" })
+-- Для некоторых дистрибутивов Linux и Neovide дублируем через код NL (New Line)
+vim.keymap.set("i", "<C-NL>", "<C-o>o", { desc = "Создать чистую строку снизу (fallback)" })
+
+-- Ctrl + Shift + Enter в Insert mode создает чистую строку сверху и переходит на неё
+vim.keymap.set("i", "<C-S-CR>", "<C-o>O", { desc = "Создать чистую строку сверху" })
+-- Для Linux/Neovide дублируем через код NL на случай альтернативного маппинга клавиш
+vim.keymap.set("i", "<C-S-NL>", "<C-o>O", { desc = "Создать чистую строку сверху (fallback)" })
