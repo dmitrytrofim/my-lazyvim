@@ -88,3 +88,11 @@ end, { desc = "Сбросить зависшие ошибки (LSP Refresh)" })
 vim.keymap.set("i", "<S-Space>", "<End>", { desc = "В конец строки" })
 -- Перемещение в начало строки на Ctrl + A (тоже полезно)
 vim.keymap.set("i", "<C-a>", "<Home>", { desc = "В начало строки" })
+
+-- F1 показывает типы, пропсы и документацию (Hover LSP)
+vim.keymap.set("n", "<F1>", vim.lsp.buf.hover, { desc = "Показать документацию/типы" })
+vim.keymap.set("i", "<F1>", "<C-o><cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Показать документацию/типы" })
+
+-- F2 запускает умное переименование (Rename)
+vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, { desc = "Переименовать сущность" })
+vim.keymap.set("i", "<F2>", "<C-o><cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Переименовать сущность" })
