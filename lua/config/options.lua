@@ -6,9 +6,22 @@ vim.opt.smoothscroll = false
 
 -- 2. Специфичные настройки для графического интерфейса Neovide
 if vim.g.neovide then
+  -- Сглаживание отрисовки окон (Отключаем размытие фона и тени)
+  -- Это главная причина фризов меню в Linux, так как GPU судорожно пересчитывает слои
+  vim.g.neovide_floating_blur_amount_x = 0.0
+  vim.g.neovide_floating_blur_amount_y = 0.0
+  vim.g.neovide_floating_shadow = false
+
+  -- Настройка частоты кадров под ваш монитор (Крайне важно в Linux)
+  -- Укажите точную герцовку вашего экрана вместо автоматической
+  vim.g.neovide_refresh_rate = 100 -- Поставьте 144 или 240, если у вас игровой монитор
+  
+  -- Позволяет Neovide засыпать и не насиловать видеокарту, когда на экране ничего не меняется
+  vim.g.neovide_no_idle = false
   -- Абсолютный и жесткий ноль для скролла на уровне GUI
   vim.g.neovide_scroll_animation_length = 0.0
   vim.g.neovide_position_animation_length = 0.0
+  vim.g.neovide_window_animation_length = 0.0
   
   -- Полное отключение анимации курсора (как в VS Code)
   vim.g.neovide_cursor_animation_length = 0.0
@@ -53,3 +66,11 @@ vim.api.nvim_create_autocmd("CursorHold", {
 -- Снижаем задержку реакции редактора (по умолчанию 4000мс, сделаем 400мс)
 -- Это ускорит появление подсказок об ошибках и уберет "тупняк" интерфейса
 vim.opt.updatetime = 400
+
+-- Время ожидания завершения комбинации клавиш (в миллисекундах)
+-- По умолчанию 500мс, уменьшаем до 50мс для мгновенного отклика
+vim.o.timeoutlen = 50
+
+-- Время ожидания после нажатия ESC до перехода в нормальный режим
+-- Важно для Linux, чтобы убрать задержку выхода из режимов
+vim.o.ttimeoutlen = 10

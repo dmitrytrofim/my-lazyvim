@@ -2,15 +2,32 @@ return {
   {
     "saghen/blink.cmp",
     opts = {
-      completion = {
-        -- Отключаем автоматическое появление меню при наборе текста
-        trigger = {
-          prefetch_on_insert = false,
-          show_on_keyword = false,
-          show_on_trigger_character = false,
+      -- Настройки клавиш
+      keymap = {
+        preset = "default",
+        ["<Esc>"] = { "hide", "fallback" },
+
+        -- Настройка стрелок для всех режимов (включая командную строку)
+        ["<Up>"] = { "select_prev", "fallback" },
+        ["<Down>"] = { "select_next", "fallback" },
+      },
+      -- Явно включаем автодополнение для командной строки
+      cmdline = {
+        enabled = true,
+        keymap = {
+          preset = "default",
+          -- Дублируем стрелки отдельно для cmdline, чтобы гарантировать работу
+          ["<Up>"] = { "select_prev", "fallback" },
+          ["<Down>"] = { "select_next", "fallback" },
         },
-        -- Отключаем автоматический предпросмотр (ghost text) в самой строке
-        ghost_text = { enabled = false },
+      },
+      completion = {
+        trigger = {
+          prefetch_on_insert = true,
+          show_on_keyword = true,
+          show_on_trigger_character = true,
+        },
+        ghost_text = { enabled = true },
       },
     },
   },
