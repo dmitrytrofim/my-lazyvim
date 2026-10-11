@@ -2,23 +2,27 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
-      -- Назначаем форматировщики для конкретных языков
       formatters_by_ft = {
+        -- Базовый JavaScript и TypeScript
         javascript = { "prettier" },
         typescript = { "prettier" },
+        
+        -- Полная поддержка React (JSX / TSX)
         javascriptreact = { "prettier" },
         typescriptreact = { "prettier" },
-        css = { "prettier" },
-        html = { "prettier" },
+        
+        -- Расширенная поддержка JSON (включая файлы с комментариями .jsonc и json5)
         json = { "prettier" },
+        jsonc = { "prettier" },
+        json5 = { "prettier" },
+        
+        -- Стили, разметка и другие конфиги
+        html = { "prettier" },
+        css = { "prettier" },
+        scss = { "prettier" },
+        less = { "prettier" },
         yaml = { "prettier" },
         markdown = { "prettier" },
-      },
-      -- Настройка автосохранения
-      format_on_save = {
-        -- Если форматировщик зависнет, Neovim не зафризит, а просто пропустит его через 500мс
-        timeout_ms = 500,
-        lsp_fallback = true, -- Если prettier нет в проекте, использовать правила самого LSP
       },
     },
   },
