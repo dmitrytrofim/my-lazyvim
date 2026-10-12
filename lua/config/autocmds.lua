@@ -37,3 +37,20 @@ vim.api.nvim_create_autocmd("BufDelete", {
     end
   end,
 })
+
+local term_group = vim.api.nvim_create_augroup("TerminalEscFix", { clear = true })
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = term_group,
+  callback = function(event)
+    -- 1. Корректно отключаем задержку локально для буфера терминала
+    vim.opt_local.timeoutlen = 0
+
+    -- 2. Назначаем мгновенный выход без вывода мусорных кодов
+    vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { 
+      buffer = event.buf, 
+      silent = true, 
+      desc = "Instant escape terminal mode" 
+    })
+  end,
+})
