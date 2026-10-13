@@ -78,3 +78,30 @@ vim.o.ttimeoutlen = 10
 -- Заставляет перезаписывать сам файл вместо его удаления и пересоздания.
 -- Это решает проблемы с любыми внешними watch-инструментами (Node.js, Vite, Webpack)
 vim.opt.backupcopy = "yes"
+
+-- Группа для изоляции настроек проводника
+local snacks_cursor_clean = vim.api.nvim_create_augroup("SnacksExplorerCursorClean", { clear = true })
+
+-- 1. При входе в проводник или его строку поиска — делаем курсор нитью hor1
+vim.api.nvim_create_autocmd("FileType", {
+  group = snacks_cursor_clean,
+  pattern = { "snacks_picker_list", "snacks_picker_input" },
+  callback = function()
+    vim.opt.guicursor = "a:hor1-blinkon0"
+  end,
+})
+
+-- 2. При выходе из проводника — ЖЕЛЕЗНО возвращаем стандартную заводскую схему Neovim
+vim.api.nvim_create_autocmd("BufLeave", {
+  group = snacks_cursor_clean,
+  pattern = "*",
+  callback = function()
+    if vim.bo.filetype == "snacks_picker_list" or vim.bo.filetype == "snacks_picker_input" then
+      -- Возвращаем официальную дефолтную строку Neovim (блок для normal/terminal, верт. линия для insert)
+      -- Это гарантирует, что движок терминала не зависнет и автокоманды в autocmds.lua продолжат работать
+      vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,t:block"
+    end
+  end,
+})
+
+vim.opt.mouse = "a" -- Мышь работает везде по умолчанию

@@ -1,33 +1,39 @@
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "xml" },
+  group = vim.api.nvim_create_augroup("WebIndentSettings", { clear = true }),
   callback = function()
-    -- 1. Ваши текущие настройки отступов (оставляем без изменений)
-    vim.opt_local.expandtab = true
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
-    vim.opt_local.softtabstop = 2
-
+    -- Отключаем старый smartindent, чтобы он не мешал ESLint/Prettier форматировать код
     vim.opt_local.indentexpr = ""
     vim.opt_local.smartindent = false
     vim.opt_local.autoindent = true
 
-    -- 2. Магия для Enter внутри тегов (как в VS Code)
-    -- Функция проверяет, находятся ли слева и справа символы '>' и '<'
+    -- Умная проверка: если LazyVim УЖЕ нашел настройки проекта (ESLint/.editorconfig),
+    -- то мы НЕ перезаписываем их своими двойками. 
+    -- Если проект чистый — включаем ваши стандартные 2 пробела.
+    if vim.snippet then -- Простая проверка, что буфер полностью инициализирован
+      -- Проверяем, менял ли кто-то отступы до нас (например, встроенный детектор проекта)
+      local current_sw = vim.bo.shiftwidth
+      if current_sw == 8 or current_sw == 0 then -- 8 — это дефолт голого Vim'а
+        vim.opt_local.expandtab = true
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.tabstop = 2
+        vim.opt_local.softtabstop = 2
+      end
+    end
+
+    -- 2. Магия для Enter внутри тегов (оставляем без изменений)
     vim.keymap.set("i", "<CR>", function()
       local line = vim.api.nvim_get_current_line()
       local col = vim.api.nvim_win_get_cursor(0)[2]
-
-      -- Если курсор стоит ровно между '>' и '<' (например, <div>|</div>)
       if col > 0 and line:sub(col, col) == ">" and line:sub(col + 1, col + 1) == "<" then
-        -- Разносим теги на три строки, делаем отступ и ставим курсор посередине
         return "<CR><Esc>O<Tab>"
       else
-        -- В остальных случаях работает обычный «тупой» перенос строки
         return "<CR>"
       end
     end, { expr = true, buffer = true, remap = false })
   end,
 })
+
 
 -- Автоматическая очистка кэша bufferline для закрытых файлов
 vim.api.nvim_create_autocmd("BufDelete", {
@@ -52,5 +58,34 @@ vim.api.nvim_create_autocmd("TermOpen", {
       silent = true, 
       desc = "Instant escape terminal mode" 
     })
+  end,
+})
+
+local snacks_mouse_isolate = vim.api.nvim_create_augroup("SnacksMouseIsolate", { clear = true })
+
+-- 1. При входе в проводник отключаем режимы выделения мыши (оставляем только клики 'n' и 'c')
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "BufWinEnter" }, {
+  group = snacks_mouse_isolate,
+  pattern = "*",
+  callback = function()
+    if vim.bo.filetype == "snacks_picker_list" or vim.bo.filetype == "snacks_picker_input" then
+      vim.opt.mouse = "nc"
+    end
+  end,
+})
+
+-- 2. При выходе из проводника обратно в код возвращаем полноценную мышь со стандартным выделением
+vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
+  group = snacks_mouse_isolate,
+  pattern = "*",
+  callback = function()
+    if vim.bo.filetype == "snacks_picker_list" or vim.bo.filetype == "snacks_picker_input" then
+      -- Используем vim.schedule, чтобы Neovim вернул мышь ровно в тот кадр, когда фокус перешел на файл кода
+      vim.schedule(function()
+        if vim.bo.filetype ~= "snacks_picker_list" and vim.bo.filetype ~= "snacks_picker_input" then
+          vim.opt.mouse = "a"
+        end
+      end)
+    end
   end,
 })
