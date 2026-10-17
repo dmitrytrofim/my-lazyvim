@@ -61,31 +61,3 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
-local snacks_mouse_isolate = vim.api.nvim_create_augroup("SnacksMouseIsolate", { clear = true })
-
--- 1. При входе в проводник отключаем режимы выделения мыши (оставляем только клики 'n' и 'c')
-vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "BufWinEnter" }, {
-  group = snacks_mouse_isolate,
-  pattern = "*",
-  callback = function()
-    if vim.bo.filetype == "snacks_picker_list" or vim.bo.filetype == "snacks_picker_input" then
-      vim.opt.mouse = "nc"
-    end
-  end,
-})
-
--- 2. При выходе из проводника обратно в код возвращаем полноценную мышь со стандартным выделением
-vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
-  group = snacks_mouse_isolate,
-  pattern = "*",
-  callback = function()
-    if vim.bo.filetype == "snacks_picker_list" or vim.bo.filetype == "snacks_picker_input" then
-      -- Используем vim.schedule, чтобы Neovim вернул мышь ровно в тот кадр, когда фокус перешел на файл кода
-      vim.schedule(function()
-        if vim.bo.filetype ~= "snacks_picker_list" and vim.bo.filetype ~= "snacks_picker_input" then
-          vim.opt.mouse = "a"
-        end
-      end)
-    end
-  end,
-})

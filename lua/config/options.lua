@@ -79,18 +79,6 @@ vim.o.ttimeoutlen = 10
 -- Это решает проблемы с любыми внешними watch-инструментами (Node.js, Vite, Webpack)
 vim.opt.backupcopy = "yes"
 
--- Группа для изоляции настроек проводника
-local snacks_cursor_clean = vim.api.nvim_create_augroup("SnacksExplorerCursorClean", { clear = true })
-
--- 1. При входе в проводник или его строку поиска — делаем курсор нитью hor1
-vim.api.nvim_create_autocmd("FileType", {
-  group = snacks_cursor_clean,
-  pattern = { "snacks_picker_list", "snacks_picker_input" },
-  callback = function()
-    vim.opt.guicursor = "a:hor1-blinkon0"
-  end,
-})
-
 -- 2. При выходе из проводника — ЖЕЛЕЗНО возвращаем стандартную заводскую схему Neovim
 vim.api.nvim_create_autocmd("BufLeave", {
   group = snacks_cursor_clean,
@@ -105,3 +93,18 @@ vim.api.nvim_create_autocmd("BufLeave", {
 })
 
 vim.opt.mouse = "a" -- Мышь работает везде по умолчанию
+
+-- Отключаем агрессивные инлайновые подсказки типов, которые ломают рендеринг в Neovide
+vim.lsp.inlay_hint.enable(false)
+
+-- Настраиваем дефолтное поведение для всех будущих LSP-серверов
+local inlay_hints_group = vim.api.nvim_create_augroup("DisableInlayHints", { clear = true })
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = inlay_hints_group,
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client then
+      vim.lsp.inlay_hint.enable(false, { bufnr = args.buf })
+    end
+  end,
+})
