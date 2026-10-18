@@ -49,8 +49,9 @@ return {
               list = {
                 keys = {
                   -- Обе стрелки вызывают confirm строго внутри проводника проекта
-                  ["<Right>"] = "confirm",
-                  ["<Left>"] = "confirm",
+                    ["<Right>"] = "confirm",
+                    ["<Left>"] = "explorer_close",
+                    ["<S-Left>"] = "explorer_close_all",
                 },
               },
             },

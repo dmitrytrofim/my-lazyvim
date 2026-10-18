@@ -2,6 +2,10 @@ return {
   {
     "saghen/blink.cmp",
     opts = {
+      snippets = { preset = "luasnip" },
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+      },
       keymap = {
         preset = "default",
         ["<Esc>"] = { "hide", "fallback" },
