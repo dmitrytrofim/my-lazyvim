@@ -1,9 +1,7 @@
-return {
-  {
+return {{
     "lazyvim/lazyvim",
     opts = {
-      colorscheme = "catppuccin", -- или tokyonight, cyberdream
-    },
-  },
-}
+        colorscheme = "catppuccin" -- или tokyonight, cyberdream
+    }
+}}
 

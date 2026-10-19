@@ -5,6 +5,14 @@
             {
                 "language": "html",
                 "path": "./html.json"
+            },
+            {
+                "language": "css",
+                "path": "./scss.json"
+            },
+            {
+                "language": "scss",
+                "path": "./scss.json"
             }
         ]
     }
