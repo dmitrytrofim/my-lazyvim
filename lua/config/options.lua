@@ -114,3 +114,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
         end
     end
 })
+
+vim.filetype.add({
+    extension = {
+        ejs = "ejs.html"
+    }
+})
+
+-- Синхронизация с системным буфером обмена
+vim.opt.clipboard = "unnamedplus"
+

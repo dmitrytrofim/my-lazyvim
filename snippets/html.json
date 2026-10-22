@@ -129,28 +129,24 @@
         ]
     },
     "url-img": {
-        "scope": "html, javascript",
         "prefix": "h-urlimg",
         "body": [
             "/img$0"
         ]
     },
     "url-svg": {
-        "scope": "html, javascript",
         "prefix": "h-urlsvg",
         "body": [
             "/img/svg$0"
         ]
     },
     "url-icons": {
-        "scope": "html, javascript",
         "prefix": "h-urlicons",
         "body": [
             "/img/icons$0"
         ]
     },
     "url-sprite": {
-        "scope": "html, javascript",
         "prefix": "h-urlspr",
         "body": [
             "/img/icons/sprite.svg#$0"
