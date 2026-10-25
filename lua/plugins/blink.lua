@@ -1,57 +1,55 @@
 return {{
     "saghen/blink.cmp",
-    opts = {
-        snippets = {
-            preset = "luasnip"
-        },
-        sources = {
-            default = {"lsp", "path", "snippets", "buffer"}
-        },
-        keymap = {
+    opts = function(_, opts)
+        -- Ключевое: не показывать меню при входе в insert mode рядом с триггером
+        opts.completion = opts.completion or {}
+        opts.completion.trigger = opts.completion.trigger or {}
+        opts.completion.trigger.show_on_insert_on_trigger_character = false
+
+        -- Ваши настройки completion (остаются)
+        opts.completion.list = {
+            selection = {
+                preselect = true,
+                auto_insert = false
+            }
+        }
+        opts.completion.trigger.show_on_keyword = true
+        opts.completion.trigger.show_on_trigger_character = true
+        opts.completion.trigger.prefetch_on_insert = true
+        opts.completion.ghost_text = {
+            enabled = true
+        }
+
+        -- Источники (без snippets, как вы хотели ранее)
+        opts.sources.default = function()
+            return {"lsp", "path", "buffer"}
+        end
+
+        -- Ваши keymap (без изменений)
+        opts.keymap = {
             preset = "default",
             ["<Esc>"] = {"hide", "fallback"},
-
-            -- НАСТРОЙКА ENTER: если меню открыто — только вставляем подсказку (без новой строки!)
             ["<CR>"] = {"accept", "fallback"},
             ["<Tab>"] = {"accept", "snippet_forward", "fallback"},
             ["<S-Tab>"] = {"snippet_backward", "select_prev", "fallback"},
             ["<C-l>"] = {"accept", "fallback"},
-
-            -- Настройка стрелок для всех режимов
             ["<Up>"] = {"select_prev", "fallback"},
             ["<Down>"] = {"select_next", "fallback"},
-
-            -- Навигация без отрыва рук (Home Row)
             ["<C-j>"] = {"select_next", "fallback"},
             ["<C-k>"] = {"select_prev", "fallback"}
-        },
-        cmdline = {
+        }
+        opts.cmdline = {
             enabled = true,
             keymap = {
                 preset = "default",
-                -- Дублируем настройки для командной строки
                 ["<CR>"] = {"accept", "fallback"},
                 ["<Up>"] = {"select_prev", "fallback"},
                 ["<Down>"] = {"select_next", "fallback"}
             }
-        },
-        completion = {
-            list = {
-                selection = {
-                    -- preselect автоматически подсвечивает первую подсказку в списке.
-                    -- Вам не нужно нажимать Ctrl+j, чтобы выбрать её, можно сразу жать Tab!
-                    preselect = true,
-                    auto_insert = false
-                }
-            },
-            trigger = {
-                prefetch_on_insert = true,
-                show_on_keyword = true,
-                show_on_trigger_character = true
-            },
-            ghost_text = {
-                enabled = true
-            }
         }
-    }
+
+        opts.snippets = {
+            preset = "luasnip"
+        }
+    end
 }}
