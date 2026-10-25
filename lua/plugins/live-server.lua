@@ -3,7 +3,7 @@ return {
     cmd = {"LiveServerStart", "LiveServerStop"},
     ft = {"html", "css", "javascript"},
     keys = {{
-        "<F12>",
+        "<leader><F12>",
         "<cmd>LiveServerStart<cr>",
         desc = "Запустить Live Server"
     }},

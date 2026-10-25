@@ -16,7 +16,8 @@ return {
         formatters = {
             prettier = {
                 -- Принудительно 4 пробела
-                prepend_args = {"--tab-width", "4", "--use-tabs", "false"}
+                prepend_args = {"--tab-width", "4", "--use-tabs", "false", "--html-whitespace-sensitivity", "ignore",
+                                "--bracket-same-line"}
             },
             eslint = {
                 -- Эта настройка говорит conform, как запускать eslint

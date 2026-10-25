@@ -7,30 +7,30 @@ return {{
         local luasnip = require("luasnip")
         local types = require("luasnip.util.types")
 
-        -- Базовая инициализация LuaSnip с дефолтными настройками
         luasnip.setup({
             history = true,
+            -- Эта опция из LazyVim помогает убирать маркеры при изменении текста
+            delete_check_events = "TextChanged,TextChangedI",
             updateevents = "TextChanged,TextChangedI",
             ext_opts = {
                 [types.insertNode] = {
                     unvisited = {
-                        virt_text = {{"│", "Comment"}}, -- Используйте вертикальную черту или другой символ
-                        virt_text_pos = "inline" -- Отображение внутри строки
-                    }
-                },
-                [types.exitNode] = {
-                    unvisited = {
                         virt_text = {{"│", "Comment"}},
                         virt_text_pos = "inline"
                     }
+                },
+                -- Оставляем настройку для exitNode, но делаем её пустой только для активного состояния,
+                -- чтобы не было дубля, когда курсор на $0.
+                -- Однако, если маркер нужен только для визуального обозначения мест ввода,
+                -- а $0 не является местом ввода, можно оставить его без текста,
+                -- но тогда нужно полагаться на delete_check_events для очистки.
+                [types.exitNode] = {
+                    -- Оставляем пустым, чтобы не дублировать, но TextChanged почистит остатки
                 }
             }
         })
 
-        -- 1. Загружаем базовые friendly-snippets (из dependencies)
         require("luasnip.loaders.from_vscode").lazy_load()
-
-        -- 2. Загружаем ваши личные сниппеты с package.json
         require("luasnip.loaders.from_vscode").lazy_load({
             paths = {vim.fn.stdpath("config") .. "/snippets"}
         })

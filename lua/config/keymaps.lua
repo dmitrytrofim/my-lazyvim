@@ -1,6 +1,11 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
+-- ~/.config/nvim/lua/config/keymaps.lua
+local macros = require("config.macros")
+
+-- Копировать класс как CSS-правило
+vim.keymap.set("n", "<F12>", require("config.macros").copy_class_to_right_window, {
+    desc = "Send class to right window"
+})
+
 -- Быстрый возврат на стартовую страницу на Пробел + h (Home)
 vim.keymap.set("n", "<leader>h", function()
     require("snacks").dashboard.open()
@@ -124,6 +129,16 @@ vim.keymap.set("n", "<F3>", "<C-w>W", {
     desc = "Вернуться в предыдущее окно"
 })
 
+-- Переключение на следующее окно и прыжок в конец файла
+vim.keymap.set("n", "<leader><F4>", "<C-w>wG", {
+    desc = "Перейти в следующее окно и в конец"
+})
+
+-- Переключение на предыдущее окно и прыжок в конец файла
+vim.keymap.set("n", "<leader><F3>", "<C-w>WG", {
+    desc = "Перейти в предыдущее окно и в конец"
+})
+
 -- Переключение окон прямо во время набора текста (Insert mode)
 -- Используем знакомую магию <C-o>, чтобы не выходить из режима вставки
 vim.keymap.set("i", "<F4>", "<C-o><C-w>w", {
@@ -164,4 +179,11 @@ vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, {
 })
 vim.keymap.set("i", "<F2>", "<C-o><cmd>lua vim.lsp.buf.rename()<cr>", {
     desc = "Переименовать сущность"
+})
+
+vim.keymap.set("n", "<leader>o", "o<Esc>", {
+    desc = "Insert line below (stay in normal mode)"
+})
+vim.keymap.set("n", "<leader>O", "O<Esc>", {
+    desc = "Insert line above (stay in normal mode)"
 })
