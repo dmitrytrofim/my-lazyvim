@@ -10,7 +10,8 @@ return {
 
             -- Для стилей — Prettier
             css = {"prettier"},
-            scss = {"prettier"}
+            scss = {"prettier"},
+            html = {"prettier"}
         },
         formatters = {
             prettier = {

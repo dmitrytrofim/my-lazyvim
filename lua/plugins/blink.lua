@@ -13,7 +13,8 @@ return {{
 
             -- НАСТРОЙКА ENTER: если меню открыто — только вставляем подсказку (без новой строки!)
             ["<CR>"] = {"accept", "fallback"},
-            ["<Tab>"] = {"accept", "fallback"},
+            ["<Tab>"] = {"accept", "snippet_forward", "fallback"},
+            ["<S-Tab>"] = {"snippet_backward", "select_prev", "fallback"},
             ["<C-l>"] = {"accept", "fallback"},
 
             -- Настройка стрелок для всех режимов

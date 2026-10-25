@@ -68,3 +68,14 @@ vim.api.nvim_create_autocmd("TermOpen", {
     end
 })
 
+-- Автоматически завершаем сниппет при выходе в Normal mode,
+-- чтобы не оставались висящие виртуальные метки (│)
+vim.api.nvim_create_autocmd("ModeChanged", {
+    pattern = "*:[nvt]",
+    callback = function()
+        local ok, luasnip = pcall(require, "luasnip")
+        if ok and luasnip.expand_or_jumpable() then
+            luasnip.unlink_current()
+        end
+    end
+})

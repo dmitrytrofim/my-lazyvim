@@ -2,6 +2,30 @@ return {
     "akinsho/bufferline.nvim",
     opts = {
         options = {
+            custom_filter = function(buf_number)
+                -- Получаем тип буфера
+                local buftype = vim.bo[buf_number].buftype
+                -- Получаем имя файла/папки
+                local name = vim.fn.bufname(buf_number)
+
+                -- 1. Показываем только обычные файлы (buftype == "")
+                -- Это отсеет все терминалы, проводники, дашборды и т.д.
+                if buftype ~= "" then
+                    return false
+                end
+
+                -- 2. Если буфер вообще без имени (пустой) - скрываем
+                if name == "" then
+                    return false
+                end
+
+                -- 3. Если имя буфера - это папка (проводник), скрываем
+                if vim.fn.isdirectory(name) == 1 then
+                    return false
+                end
+
+                return true
+            end,
             always_show_bufferline = true,
             -- Переключаем режим на 'buffers', так как форматирование имени мы берем на себя
             mode = "buffers",
