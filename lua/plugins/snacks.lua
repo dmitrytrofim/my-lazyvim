@@ -1,9 +1,5 @@
 return { -- 1. Бан для старого аутлайна
 {
-    "hedyhli/outline.nvim",
-    enabled = false
-}, -- 2. Наша чистая конфигурация Snacks
-{
     "folke/snacks.nvim",
     opts = {
         scroll = {
@@ -19,18 +15,11 @@ return { -- 1. Бан для старого аутлайна
             },
             scope = {
                 enabled = true,
-                char = "│",
-                animate = {
-                    enabled = true,
-                    duration = 0
-                }
+                char = "│"
             }
         },
         scope = {
             enabled = true
-        },
-        explorer = {
-            replace_netrw = true
         },
         picker = {
             win = {
@@ -103,18 +92,21 @@ return { -- 1. Бан для старого аутлайна
     {
         "gO",
         function()
-            if Snacks and Snacks.picker and Snacks.picker.lsp_symbols then
-                Snacks.picker.lsp_symbols({
-                    layout = {
-                        preset = "sidebar",
-                        side = "right"
-                    },
-                    -- МАГИЯ ЗДЕСЬ: переключаем источник с LSP на Tree-sitter!
-                    -- Это заставит панель мгновенно читать структуру файла, даже если LSP завис
-                    backend = "treesitter"
-                })
-            end
+            Snacks.picker.lsp_symbols({
+                layout = {
+                    preset = "sidebar",
+                    side = "right"
+                },
+                focus = "list",
+                win = {
+                    list = {
+                        keys = {
+                            ["l"] = "confirm"
+                        }
+                    }
+                }
+            })
         end,
-        desc = "Structure Outline (Tree-sitter Backend)"
+        desc = "Structure Outline (LSP)"
     }}
 }}
