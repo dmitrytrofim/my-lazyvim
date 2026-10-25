@@ -2,46 +2,52 @@
 local M = {}
 
 function M.copy_class_to_right_window()
-    -- Получаем строку и позицию курсора
+    -- 1. Получаем строку и 0-based индекс курсора
     local line = vim.api.nvim_get_current_line()
-    local col = vim.api.nvim_win_get_cursor(0)[2]
+    local cursor_col = vim.api.nvim_win_get_cursor(0)[2]
 
-    -- Ищем слово, включающее буквы, цифры, дефисы и подчеркивания, в котором стоит курсор
-    local word = ""
-    for w in line:gmatch("[%w%-_]+") do
-        local start_pos = line:find(w, 1, true)
-        -- Грубая проверка, что курсор попал в это слово
-        if col >= start_pos - 1 and col <= start_pos + #w - 1 then
-            word = w
-            break
-        end
+    -- 2. Вырезаем "сырое" слово, просто взяв символы вокруг курсора
+    -- Идем влево до разделителя (пробел, кавычка, угловая скобка, равно)
+    local start_idx = cursor_col + 1
+    while start_idx > 1 and not line:sub(start_idx - 1, start_idx - 1):match("[%s\"'=<>{}().,]") do
+        start_idx = start_idx - 1
     end
 
-    if word == "" then
+    -- Идем вправо до разделителя
+    local end_idx = cursor_col + 1
+    while end_idx <= #line and not line:sub(end_idx, end_idx):match("[%s\"'=<>{}().,]") do
+        end_idx = end_idx + 1
+    end
+
+    -- Получаем слово
+    local word = line:sub(start_idx, end_idx - 1)
+
+    -- Если слово пустое (например, курсор на пробеле или скобке) — выходим
+    if word == "" or word:match("^%s*$") then
         return
     end
 
+    -- 3. Отрезаем префикс до точки (styles.header -> header)
     word = word:match("([^%.]+)$") or word
 
-    -- 1. Запоминаем текущее (HTML) окно
+    -- 4. Запоминаем текущее окно
     local current_win = vim.api.nvim_get_current_win()
 
-    -- 2. Переключаемся вправо
+    -- 5. Переключаемся вправо
     vim.cmd("wincmd l")
 
-    -- Если окна справа нет — выходим
     if vim.api.nvim_get_current_win() == current_win then
         vim.notify("Окно справа не найдено", vim.log.levels.WARN)
         return
     end
 
-    -- 3. Вставляем блок в конец файла
+    -- 6. Вставляем блок в конец файла
     local buf = vim.api.nvim_get_current_buf()
     local line_count = vim.api.nvim_buf_line_count(buf)
 
-    vim.api.nvim_buf_set_lines(buf, line_count, line_count, false, {"", "." .. word .. " {}"})
+    vim.api.nvim_buf_set_lines(buf, line_count, line_count, false, {"", "." .. word .. " {", "}"})
 
-    -- 4. Возвращаем фокус обратно в исходное (HTML) окно
+    -- 7. Возвращаем фокус обратно
     vim.api.nvim_set_current_win(current_win)
 end
 
