@@ -120,3 +120,9 @@ vim.filetype.add({
         ejs = "ejs.html"
     }
 })
+
+-- Устанавливаем 4 пробела по умолчанию для всех файлов
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true

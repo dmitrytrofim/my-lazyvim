@@ -8,15 +8,34 @@ end, {
     desc = "Open home"
 })
 
--- Одна кнопка для сохранения ВСЕГО (и в Normal, и в Insert режимах)
--- Для Normal режима
-vim.keymap.set('n', '<F5>', '<cmd>wall<cr>', {
-    desc = 'Сохранить все файлы'
+-- 1. F5 для сохранения и форматирования (в обычном режиме)
+vim.keymap.set('n', '<F5>', function()
+    -- Сначала форматируем (ручной вызов, который у тебя работает)
+    require("conform").format({
+        async = true,
+        lsp_format = "fallback"
+    })
+    -- Затем сохраняем все файлы
+    vim.cmd("wall")
+end, {
+    desc = 'Форматировать и сохранить все файлы'
 })
--- Для Insert режима (теперь ничего лишнего вставляться не будет)
-vim.keymap.set('i', '<F5>', '<C-O><cmd>wall<cr>', {
-    desc = 'Сохранить все файлы'
+
+-- 2. F5 для сохранения и форматирования (в режиме вставки)
+vim.keymap.set('i', '<F5>', function()
+    -- Выходим из режима вставки, чтобы conform мог работать корректно
+    vim.cmd("stopinsert")
+    -- Форматируем
+    require("conform").format({
+        async = true,
+        lsp_format = "fallback"
+    })
+    -- Сохраняем
+    vim.cmd("wall")
+end, {
+    desc = 'Форматировать и сохранить все файлы'
 })
+
 -- Перемещение вкладок-буферов влево и вправо по Alt + Shift + h/l
 vim.keymap.set("n", "<A-S-h>", "<cmd>BufferLineMovePrev<cr>", {
     desc = "Сдвинуть вкладку влево"
