@@ -1,3 +1,38 @@
+-- Защита от случайных нажатий в read-only и служебных буферах
+local readonly_protection_group = vim.api.nvim_create_augroup("ReadonlyProtection", {
+    clear = true
+})
+
+vim.api.nvim_create_autocmd({"BufWinEnter", "BufEnter"}, {
+    group = readonly_protection_group,
+    pattern = "*",
+    callback = function()
+        -- Если буфер нельзя изменять или он только для чтения
+        if not vim.bo.modifiable or vim.bo.readonly then
+            local bufnr = vim.api.nvim_get_current_buf()
+
+            -- Блокируем клавиши перехода в режим вставки (Insert Mode)
+            local insert_keys = {"i", "I", "a", "A", "o", "O", "s", "S", "c", "C"}
+            for _, key in ipairs(insert_keys) do
+                vim.keymap.set("n", key, "<Nop>", {
+                    buffer = bufnr,
+                    silent = true,
+                    nowait = true
+                })
+            end
+
+            -- Если это служебное окно без файла, разрешаем закрыть его на "q"
+            if vim.bo.buftype == "nofile" or vim.bo.filetype == "help" then
+                vim.keymap.set("n", "q", ":close<CR>", {
+                    buffer = bufnr,
+                    silent = true,
+                    nowait = true
+                })
+            end
+        end
+    end
+})
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = {"html", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "xml"},
     group = vim.api.nvim_create_augroup("WebIndentSettings", {
@@ -68,14 +103,3 @@ vim.api.nvim_create_autocmd("TermOpen", {
     end
 })
 
--- Автоматически завершаем сниппет при выходе в Normal mode,
--- чтобы не оставались висящие виртуальные метки (│)
-vim.api.nvim_create_autocmd("ModeChanged", {
-    pattern = "*:[nvt]",
-    callback = function()
-        local ok, luasnip = pcall(require, "luasnip")
-        if ok and luasnip.expand_or_jumpable() then
-            luasnip.unlink_current()
-        end
-    end
-})

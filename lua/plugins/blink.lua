@@ -7,17 +7,22 @@ return {{
         opts.completion.trigger.show_on_insert_on_trigger_character = false
 
         -- Источники — как было изначально, со snippets
-        opts.sources.default = function()
-            return {"lsp", "path", "snippets", "buffer"}
-        end
+        opts.sources = opts.sources or {}
+        opts.sources.default = {"lsp", "path", "snippets", "buffer"}
 
-        -- Твои настройки (без изменений)
         opts.snippets = {
             preset = "luasnip"
         }
+
         opts.keymap = {
             preset = "default",
-            ["<Esc>"] = {"hide", "fallback"},
+            -- ИСПРАВЛЕНО: При нажатии <Esc> сначала принудительно очищаем сниппет, затем скрываем меню
+            ["<Esc>"] = {function()
+                local ok, luasnip = pcall(require, "luasnip")
+                if ok then
+                    luasnip.unlink_current()
+                end
+            end, "hide", "fallback"},
             ["<CR>"] = {"accept", "fallback"},
             ["<Tab>"] = {"accept", "snippet_forward", "fallback"},
             ["<S-Tab>"] = {"snippet_backward", "select_prev", "fallback"},
@@ -27,6 +32,7 @@ return {{
             ["<C-j>"] = {"select_next", "fallback"},
             ["<C-k>"] = {"select_prev", "fallback"}
         }
+
         opts.cmdline = {
             enabled = true,
             keymap = {
@@ -36,12 +42,14 @@ return {{
                 ["<Down>"] = {"select_next", "fallback"}
             }
         }
+
         opts.completion.list = {
             selection = {
                 preselect = true,
                 auto_insert = false
             }
         }
+
         opts.completion.trigger.prefetch_on_insert = true
         opts.completion.trigger.show_on_keyword = true
         opts.completion.trigger.show_on_trigger_character = true
