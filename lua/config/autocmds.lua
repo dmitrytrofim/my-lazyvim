@@ -7,10 +7,16 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "BufEnter"}, {
     group = readonly_protection_group,
     pattern = "*",
     callback = function()
-        -- Если буфер нельзя изменять или он только для чтения
-        if not vim.bo.modifiable or vim.bo.readonly then
-            local bufnr = vim.api.nvim_get_current_buf()
+        local bufnr = vim.api.nvim_get_current_buf()
 
+        -- ИСКЛЮЧЕНИЕ ДЛЯ AVANTE: Не блокируем клавиши в окнах diff, ask и т.д.
+        -- Avante использует filetype = "Avante" и/или buftype = "acwrite"
+        if vim.bo[bufnr].filetype == "Avante" or vim.bo[bufnr].buftype == "acwrite" then
+            return
+        end
+
+        -- Если буфер нельзя изменять или он только для чтения
+        if not vim.bo[bufnr].modifiable or vim.bo[bufnr].readonly then
             -- Блокируем клавиши перехода в режим вставки (Insert Mode)
             local insert_keys = {"i", "I", "a", "A", "o", "O", "s", "S", "c", "C"}
             for _, key in ipairs(insert_keys) do
@@ -22,7 +28,7 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "BufEnter"}, {
             end
 
             -- Если это служебное окно без файла, разрешаем закрыть его на "q"
-            if vim.bo.buftype == "nofile" or vim.bo.filetype == "help" then
+            if vim.bo[bufnr].buftype == "nofile" or vim.bo[bufnr].filetype == "help" then
                 vim.keymap.set("n", "q", ":close<CR>", {
                     buffer = bufnr,
                     silent = true,
@@ -75,15 +81,6 @@ vim.api.nvim_create_autocmd("FileType", {
     end
 })
 
--- Автоматическая очистка кэша bufferline для закрытых файлов
-vim.api.nvim_create_autocmd("BufDelete", {
-    callback = function(args)
-        if git_root_cache then
-            git_root_cache[args.buf] = nil
-        end
-    end
-})
-
 local term_group = vim.api.nvim_create_augroup("TerminalEscFix", {
     clear = true
 })
@@ -103,3 +100,17 @@ vim.api.nvim_create_autocmd("TermOpen", {
     end
 })
 
+-- ==========================================
+-- АВТО-ОБНОВЛЕНИЕ ФАЙЛОВ (Для Avante и других инструментов)
+-- ==========================================
+local autoread_group = vim.api.nvim_create_augroup("AutoReadReload", {
+    clear = true
+})
+
+-- Проверяем изменения при фокусе окна, переключении буферов и бездействии
+vim.api.nvim_create_autocmd({"FocusGained", "BufEnter", "CursorHold"}, {
+    group = autoread_group,
+    pattern = "*",
+    command = "checktime",
+    desc = "Перечитывать файл с диска, если он изменился извне (например, Avante)"
+})

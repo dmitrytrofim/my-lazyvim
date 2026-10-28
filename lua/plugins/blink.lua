@@ -36,7 +36,7 @@ return {{
         opts.cmdline = {
             enabled = true,
             keymap = {
-                preset = "default",
+                preset = "cmdline",
                 ["<CR>"] = {"accept", "fallback"},
                 ["<Up>"] = {"select_prev", "fallback"},
                 ["<Down>"] = {"select_next", "fallback"}
