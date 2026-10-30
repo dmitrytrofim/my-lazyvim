@@ -79,6 +79,10 @@ vim.opt.backupcopy = "yes"
 
 vim.o.autoread = true
 
+local snacks_cursor_clean = vim.api.nvim_create_augroup("SnacksCursorClean", {
+    clear = true
+})
+
 -- 2. При выходе из проводника — ЖЕЛЕЗНО возвращаем стандартную заводскую схему Neovim
 vim.api.nvim_create_autocmd("BufLeave", {
     group = snacks_cursor_clean,

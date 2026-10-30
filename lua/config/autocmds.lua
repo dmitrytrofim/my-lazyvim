@@ -9,9 +9,8 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "BufEnter"}, {
     callback = function()
         local bufnr = vim.api.nvim_get_current_buf()
 
-        -- ИСКЛЮЧЕНИЕ ДЛЯ AVANTE: Не блокируем клавиши в окнах diff, ask и т.д.
-        -- Avante использует filetype = "Avante" и/или buftype = "acwrite"
-        if vim.bo[bufnr].filetype == "Avante" or vim.bo[bufnr].buftype == "acwrite" then
+        -- ДОБАВИТЬ: исключение для Snacks Picker input
+        if vim.bo[bufnr].filetype == "snacks_picker_input" then
             return
         end
 
@@ -101,7 +100,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 
 -- ==========================================
--- АВТО-ОБНОВЛЕНИЕ ФАЙЛОВ (Для Avante и других инструментов)
+-- Автообновление файлов при внешних изменениях (CodeCompanion, git, внешние редакторы)
 -- ==========================================
 local autoread_group = vim.api.nvim_create_augroup("AutoReadReload", {
     clear = true
@@ -111,6 +110,10 @@ local autoread_group = vim.api.nvim_create_augroup("AutoReadReload", {
 vim.api.nvim_create_autocmd({"FocusGained", "BufEnter", "CursorHold"}, {
     group = autoread_group,
     pattern = "*",
-    command = "checktime",
-    desc = "Перечитывать файл с диска, если он изменился извне (например, Avante)"
+    callback = function()
+        if vim.fn.mode() ~= "c" then
+            vim.cmd("checktime")
+        end
+    end,
+    desc = "Перечитывать файл с диска при внешних изменениях"
 })

@@ -39,7 +39,8 @@ return {{
                 preset = "cmdline",
                 ["<CR>"] = {"accept", "fallback"},
                 ["<Up>"] = {"select_prev", "fallback"},
-                ["<Down>"] = {"select_next", "fallback"}
+                ["<Down>"] = {"select_next", "fallback"},
+                ["<Right>"] = {"accept", "fallback"}
             }
         }
 

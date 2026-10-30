@@ -1,4 +1,9 @@
-return {{
+return { -- 1. Отключаем старый дашборд
+{
+    "nvimdev/dashboard-nvim",
+    enabled = false
+}, -- 2. Настраиваем Snacks
+{
     "folke/snacks.nvim",
     opts = {
         dashboard = {
@@ -16,4 +21,3 @@ return {{
         }
     }
 }}
-

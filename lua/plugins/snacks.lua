@@ -34,6 +34,8 @@ return { -- 1. Бан для старого аутлайна
                 list = {
                     keys = {
                         ["o"] = "confirm"
+                        -- ["i"] = "focus_input" <-- Строку не удалил, а закомментировал, 
+                        -- так как теперь мы принудительно внедряем её в config ниже
                     }
                 }
             },
@@ -62,7 +64,18 @@ return { -- 1. Бан для старого аутлайна
                 }
             }
         }
-    }, -- Здесь теперь всё закрыто корректно, без синтаксического мусора
+    },
+    -- ДОБАВЛЯЕМ БЛОК CONFIG:
+    config = function(_, opts)
+        -- Железобетонно внедряем маппинг уже в готовую таблицу opts перед запуском Snacks
+        opts.picker = opts.picker or {}
+        opts.picker.win = opts.picker.win or {}
+        opts.picker.win.list = opts.picker.win.list or {}
+        opts.picker.win.list.keys = opts.picker.win.list.keys or {}
+
+        -- Запускаем плагин с обновленными настройками
+        require("snacks").setup(opts)
+    end,
     keys = {{
         "<leader>fe",
         function()
